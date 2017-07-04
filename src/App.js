@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import './App.css';
-import {Grid, Row, Col, FormGroup, FormControl, Button} from 'react-bootstrap'
+import {Grid, Row, Col, FormGroup, FormControl, Button, Panel} from 'react-bootstrap'
 import marked from 'marked'
 
 class App extends Component {
@@ -16,9 +16,10 @@ class App extends Component {
   convert(){
     const val = this.state.value;
     const that = this;
-    marked(val, function (err, content) {
+    marked(val, {sanitize: true}, function (err, content) {
       if (err) throw err;
-      that.setState({preview : val});
+      console.log(content);
+      that.setState({preview : content});
     });
   }
   render() {
@@ -37,11 +38,9 @@ class App extends Component {
               </div>
             </Col>
             <Col sm={6}>
-              <div id="preview">
-                <FormGroup controlId="formControlsTextarea">
-                  <FormControl componentClass="textarea" value={this.state.preview} disabled={"disabled"}/>
-                </FormGroup>
-              </div>
+              <Panel id="preview">
+                <div dangerouslySetInnerHTML={{__html : this.state.preview}} />
+              </Panel>
             </Col>
           </Row>
           <Button bsStyle="info" onClick={this.handleClick}>Convert</Button>
